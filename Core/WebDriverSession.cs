@@ -1,16 +1,11 @@
 using Core.Http;
+using Core.Session;
 
 namespace Core;
 
 public class WebDriverSession(string id)
 {
+    public SessionLocation Location = new SessionLocation(id);
+    
     private string Id { get; init; } = id;
-
-    public async Task NavigateTo(string url)
-    {
-        var response = await DriverClient.PostAsync<dynamic>($"/session/{Id}/url", new
-        {
-            url = url,
-        });
-    }
 }

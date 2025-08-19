@@ -1,8 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Dynamic;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using Core.Http;
 using Core.Http.Dto.Session;
 
@@ -57,7 +53,7 @@ public abstract class WebDriver
         };
         
         var data = await DriverClient.PostAsync<CreateSessionResponse>("/session", body);
-        return new WebDriverSession(data!.Value.SessionId);
+        return new WebDriverSession(data!.SessionId);
     }
 
     
