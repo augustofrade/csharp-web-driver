@@ -39,7 +39,7 @@ public class NavigationTests
     }
     
     [Fact]
-    public async Task Session_ShouldGet_RefreshPage()
+    public async Task Session_Should_RefreshPage()
     {
         var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
         var session = await driver.Start();
@@ -47,5 +47,19 @@ public class NavigationTests
         await Task.Delay(2000);
         await session.Location.Refresh();
         await Task.Delay(2000);
+    }
+    
+    [Fact]
+    public async Task Session_ShouldChangeLocation_BackAndForward()
+    {
+        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
+        var session = await driver.Start();
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        await Task.Delay(500);
+        await session.Location.NavigateTo("https://github.com/");
+        await Task.Delay(1000);
+        await session.Location.Back();
+        await Task.Delay(2000);
+        await session.Location.Forward();
     }
 }

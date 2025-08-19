@@ -22,7 +22,19 @@ public class SessionLocation(string sessionId)
     
     public async Task<bool> Refresh()
     {
-        var response = await DriverClient.PostAsync<string?>($"/session/{SessionId}/refresh", new {});
+        var response = await DriverClient.PostAsync<string?>($"/session/{SessionId}/refresh");
+        return response == null;
+    }
+    
+    public async Task<bool> Back()
+    {
+        var response = await DriverClient.PostAsync<string?>($"/session/{SessionId}/back");
+        return response == null;
+    }
+    
+    public async Task<bool> Forward()
+    {
+        var response = await DriverClient.PostAsync<string?>($"/session/{SessionId}/forward");
         return response == null;
     }
 }
