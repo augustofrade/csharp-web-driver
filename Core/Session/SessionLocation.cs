@@ -19,4 +19,10 @@ public class SessionLocation(string sessionId)
         var response = await DriverClient.GetAsync<string>($"/session/{SessionId}/url");
         return response!;
     }
+    
+    public async Task<bool> Refresh()
+    {
+        var response = await DriverClient.PostAsync<string?>($"/session/{SessionId}/refresh", new {});
+        return response == null;
+    }
 }

@@ -37,4 +37,15 @@ public class NavigationTests
         var currentUrl = await session.Location.CurrentUrl();
         Assert.Equal("https://duckduckgo.com/", currentUrl);
     }
+    
+    [Fact]
+    public async Task Session_ShouldGet_RefreshPage()
+    {
+        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
+        var session = await driver.Start();
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        await Task.Delay(2000);
+        await session.Location.Refresh();
+        await Task.Delay(2000);
+    }
 }

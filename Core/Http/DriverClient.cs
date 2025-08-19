@@ -10,7 +10,7 @@ public static class DriverClient
         BaseAddress = new Uri("http://127.0.0.1:4444"),
     };
 
-    public static async Task<T?> GetAsync<T>(string requestUri) where T : class
+    public static async Task<T?> GetAsync<T>(string requestUri) where T : class?
     {
         var response = await Http.GetAsync(requestUri);
         var rawResponse = await response.Content.ReadAsStringAsync();
@@ -18,8 +18,8 @@ public static class DriverClient
         var data = JsonSerializer.Deserialize<WebDriverReponse<T>>(rawResponse);
         return data?.Value;
     }
-
-    public static Task<T?> PostAsync<T>(string? requestUri, object body) where T : class
+    
+    public static Task<T?> PostAsync<T>(string? requestUri, object body) where T : class?
     {
         var json = JsonSerializer.Serialize(body);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -27,7 +27,7 @@ public static class DriverClient
         return PostAsync<T>(requestUri, content);
     }
     
-    public static async Task<T?> PostAsync<T>(string? requestUri, HttpContent content) where T : class
+    public static async Task<T?> PostAsync<T>(string? requestUri, HttpContent content) where T : class?
     {
         var response = await Http.PostAsync(requestUri, content);
         var rawResponse = await response.Content.ReadAsStringAsync();

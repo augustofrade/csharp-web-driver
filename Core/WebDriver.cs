@@ -4,20 +4,14 @@ using Core.Http.Dto.Session;
 
 namespace Core;
 
-public abstract class WebDriver
+public abstract class WebDriver(WebDriverOptions options)
 {
-    private string WebDriverPath { get; init; }
-    private string BrowserBinaryPath { get; init; }
+    private string WebDriverPath { get; init; } = options.WebDriverPath;
+    private string BrowserBinaryPath { get; init; } = options.BrowserBinaryPath;
 
     private int Port { get; set; }
-    
-    public abstract string BrowserName { get; }
 
-    public WebDriver(WebDriverOptions options)
-    {
-        WebDriverPath = options.WebDriverPath;
-        BrowserBinaryPath = options.BrowserBinaryPath;
-    }
+    protected abstract string BrowserName { get; }
 
     public async Task<WebDriverSession> Start(int port = 4444)
     {
