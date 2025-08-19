@@ -19,6 +19,11 @@ public static class DriverClient
         return data?.Value;
     }
     
+    public static Task<T?> PostAsync<T>(string? requestUri) where T : class?
+    {
+        return PostAsync<T>(requestUri, new {});
+    }
+    
     public static Task<T?> PostAsync<T>(string? requestUri, object body) where T : class?
     {
         var json = JsonSerializer.Serialize(body);
