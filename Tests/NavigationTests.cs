@@ -62,4 +62,14 @@ public class NavigationTests
         await Task.Delay(2000);
         await session.Location.Forward();
     }
+    
+    [Fact]
+    public async Task Session_ShouldGet_PageTitle()
+    {
+        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
+        var session = await driver.Start();
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        var title = await session.Location.Title();
+        Assert.Equal("DuckDuckGo - Protection. Privacy. Peace of mind." , title);
+    }
 }

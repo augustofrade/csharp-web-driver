@@ -13,6 +13,12 @@ public class SessionLocation(string sessionId)
             url = url,
         });
     }
+    
+    public async Task<string> Title()
+    {
+        var response = await DriverClient.GetAsync<string>($"/session/{SessionId}/title");
+        return response!;
+    }
 
     public async Task<string> CurrentUrl()
     {
