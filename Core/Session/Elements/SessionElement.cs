@@ -36,4 +36,11 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         var response = await DriverClient.PostAsync<string?>(url);
         return response == null;
     }
+
+    public async Task<string> GetText()
+    {
+        var url = $"/session/{sessionId}/element/{identifier}/text";
+        var response = await DriverClient.GetAsync<string>(url);
+        return response!;
+    }
 }

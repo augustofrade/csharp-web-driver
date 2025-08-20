@@ -35,4 +35,17 @@ public class ElementInteractionTests
         
         await Task.Delay(2000);
     }
+    
+    [Fact]
+    public async Task Session_ShouldGetElement_Text()
+    {
+        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
+        var session = await driver.Start();
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        await Task.Delay(1000);
+
+        var titleEl = await session.Dom.QuerySelector("#searchbox_homepage button:last-child");
+        var title = await  titleEl.GetText();
+        Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
+    }
 }
