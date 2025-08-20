@@ -8,6 +8,5 @@ public class WebDriverSession(string id)
 {
     public SessionLocation Location = new SessionLocation(id);
     public IElementSelector Dom = new SessionElementSelector(id);
-    
-    private string Id { get; init; } = id;
+    public SessionContext Context = new SessionContext(id);
 }

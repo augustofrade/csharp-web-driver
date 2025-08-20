@@ -84,4 +84,9 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         var url = $"{BaseEndpoint}/property/{propertyName}";
         return DriverClient.GetAsync<T>(url);
     }
+
+    public override string ToString()
+    {
+        return identifier;
+    }
 }
