@@ -4,26 +4,13 @@ using DotNetEnv;
 
 namespace Tests;
 
-public class ElementInteractionTests
+public class ElementInteractionTests : Base
 {
-    private string DriverPath { get; init; }
-    private string BinaryPath { get; init; }
-    
-    public ElementInteractionTests()
-    {
-        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        var envPath = Path.GetFullPath(Path.Combine(baseDir, "../../../.env"));
-        Env.Load(envPath);
-        
-        DriverPath = Environment.GetEnvironmentVariable("DRIVER_PATH")!;
-        BinaryPath = Environment.GetEnvironmentVariable("BINARY_PATH")!;
-    }
-    
     [Fact]
     public async Task Session_ShouldInteractBy_TypingAndClicking()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -39,8 +26,8 @@ public class ElementInteractionTests
     [Fact]
     public async Task Session_ShouldGetElement_Text()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
 
@@ -52,8 +39,8 @@ public class ElementInteractionTests
     [Fact]
     public async Task Session_ShouldGetHackerNews_SubmissionTitles()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://news.ycombinator.com/");
         await Task.Delay(1000);
 

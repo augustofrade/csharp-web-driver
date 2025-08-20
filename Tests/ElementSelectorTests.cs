@@ -4,26 +4,14 @@ using DotNetEnv;
 
 namespace Tests;
 
-public class ElementSelectorTests
+public class ElementSelectorTests : Base
 {
-    private string DriverPath { get; init; }
-    private string BinaryPath { get; init; }
-    
-    public ElementSelectorTests()
-    {
-        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        var envPath = Path.GetFullPath(Path.Combine(baseDir, "../../../.env"));
-        Env.Load(envPath);
-        
-        DriverPath = Environment.GetEnvironmentVariable("DRIVER_PATH")!;
-        BinaryPath = Environment.GetEnvironmentVariable("BINARY_PATH")!;
-    }
     
     [Fact]
     public async Task Session_ShouldFindElementBy_Id()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -35,8 +23,8 @@ public class ElementSelectorTests
     [Fact]
     public async Task Session_ShouldFindElementBy_TagName()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -47,8 +35,8 @@ public class ElementSelectorTests
     [Fact]
     public async Task Session_ShouldFindElementBy_ClassName()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -59,8 +47,8 @@ public class ElementSelectorTests
     [Fact]
     public async Task Session_ShouldFindElementBy_QuerySelector()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -71,8 +59,8 @@ public class ElementSelectorTests
     [Fact]
     public async Task Session_ShouldFindAllElementsBy_QuerySelector()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
@@ -83,8 +71,8 @@ public class ElementSelectorTests
     [Fact]
     public async Task Session_ShouldFindElementBy_XPath()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         

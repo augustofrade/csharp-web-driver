@@ -4,26 +4,13 @@ using DotNetEnv;
 
 namespace Tests;
 
-public class NavigationTests
+public class NavigationTests: Base
 {
-    private string DriverPath { get; init; }
-    private string BinaryPath { get; init; }
-    
-    public NavigationTests()
-    {
-        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        var envPath = Path.GetFullPath(Path.Combine(baseDir, "../../../.env"));
-        Env.Load(envPath);
-        
-        DriverPath = Environment.GetEnvironmentVariable("DRIVER_PATH")!;
-        BinaryPath = Environment.GetEnvironmentVariable("BINARY_PATH")!;
-    }
-    
     [Fact]
     public async Task Session_ShouldNavigateTo_DummyPage()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://www.duckduckgo.com/");
     }
 
@@ -31,8 +18,8 @@ public class NavigationTests
     [Fact]
     public async Task Session_ShouldGet_CurrentURL()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         var currentUrl = await session.Location.CurrentUrl();
         Assert.Equal("https://duckduckgo.com/", currentUrl);
@@ -41,8 +28,8 @@ public class NavigationTests
     [Fact]
     public async Task Session_Should_RefreshPage()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(2000);
         await session.Location.Refresh();
@@ -52,8 +39,8 @@ public class NavigationTests
     [Fact]
     public async Task Session_ShouldChangeLocation_BackAndForward()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(500);
         await session.Location.NavigateTo("https://github.com/");
@@ -66,8 +53,8 @@ public class NavigationTests
     [Fact]
     public async Task Session_ShouldGet_PageTitle()
     {
-        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
-        var session = await driver.Start();
+        var session = await InitSession();
+        
         await session.Location.NavigateTo("https://duckduckgo.com/");
         var title = await session.Location.Title();
         Assert.Equal("DuckDuckGo - Protection. Privacy. Peace of mind." , title);
