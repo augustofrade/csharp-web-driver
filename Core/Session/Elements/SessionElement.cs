@@ -6,10 +6,9 @@ namespace Core.Session.Elements;
 
 public class SessionElement(string sessionId, string identifier) : ElementSelector(sessionId, $"/session/{sessionId}/element/{identifier}")
 {
-
     public async Task SendKeys(string keys, bool simulateTyping = true)
     {
-        var url = $"/session/{sessionId}/element/{identifier}/value";
+        var url = $"{BaseEndpoint}/value";
         if (!simulateTyping)
         {
             await DriverClient.PostAsync<object>(url, new
@@ -30,8 +29,8 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
 
     public async Task<bool> Click()
     {
-        var url = $"/session/{sessionId}/element/{identifier}/click";
-        var response = await DriverClient.PostAsync<string?>(url);
+        var url = $"{BaseEndpoint}/click";
+        var response = await DriverClient.PostAsync<object?>(url);
         return response == null;
     }
 
@@ -39,7 +38,7 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
 
     public async Task<string> GetTextAsync()
     {
-        var url = $"/session/{sessionId}/element/{identifier}/text";
+        var url = $"{BaseEndpoint}/text";
         var response = await DriverClient.GetAsync<string>(url);
         return response!;
     }
@@ -56,12 +55,12 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
                 new { ELEMENT = identifier }
             }
         };
-        var url = $"/session/{sessionId}/execute/sync";
+        var url = $"/session/{SessionId}/execute/sync";
 
         try
         {
             var response = await DriverClient.PostAsync<IEnumerable<FindElementResponse>>(url, body);
-            return response == null ? [] : response.Select(el => new SessionElement(sessionId, el.ElementIdentifier));
+            return response == null ? [] : response.Select(el => new SessionElement(SessionId, el.ElementIdentifier));
         } catch (Exception ex)
         {
             return [];

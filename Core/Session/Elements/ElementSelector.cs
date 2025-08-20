@@ -3,8 +3,17 @@ using Core.Http.Dto.Session.Elements;
 
 namespace Core.Session.Elements;
 
-public abstract class ElementSelector(string sessionId, string baseEndpoint) : IElementSelector
+public abstract class ElementSelector : IElementSelector
 {
+    protected readonly string SessionId;
+    protected readonly string BaseEndpoint;
+
+    protected ElementSelector(string sessionId, string baseEndpoint)
+    {
+        SessionId = sessionId;
+        BaseEndpoint = baseEndpoint;
+    }
+    
     public Task<SessionElement?> QuerySelector(string query)
     {
         return GetElement("css selector", query);
@@ -57,13 +66,13 @@ public abstract class ElementSelector(string sessionId, string baseEndpoint) : I
             { "using", selector },
             { "value", value }
         };
-        var url = $"{baseEndpoint}/element";
+        var url = $"{BaseEndpoint}/element";
         
         try
         {
 
             var response = await DriverClient.PostAsync<FindElementResponse?>(url, body);
-            return response == null ? null : new SessionElement(sessionId, response.ElementIdentifier);
+            return response == null ? null : new SessionElement(SessionId, response.ElementIdentifier);
         }
         catch (Exception ex)
         {
@@ -78,12 +87,12 @@ public abstract class ElementSelector(string sessionId, string baseEndpoint) : I
             { "using", selector },
             { "value", value }
         };
-        var url = $"{baseEndpoint}/elements";
+        var url = $"{BaseEndpoint}/elements";
         
         try
         {
             var response = await DriverClient.PostAsync<IEnumerable<FindElementResponse>?>(url, body);
-            return response == null ? [] : response.Select(el => new SessionElement(sessionId, el.ElementIdentifier));
+            return response == null ? [] : response.Select(el => new SessionElement(SessionId, el.ElementIdentifier));
         }
         catch (Exception ex)
         {
