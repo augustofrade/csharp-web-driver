@@ -10,13 +10,13 @@ public static class DriverClient
         BaseAddress = new Uri("http://127.0.0.1:4444"),
     };
 
-    public static async Task<T?> GetAsync<T>(string requestUri) where T : class?
+    public static async Task<T?> GetAsync<T>(string requestUri)
     {
         var response = await Http.GetAsync(requestUri);
         var rawResponse = await response.Content.ReadAsStringAsync();
         
         var data = JsonSerializer.Deserialize<WebDriverReponse<T>>(rawResponse);
-        return data?.Value;
+        return data == null ? default : data.Value;
     }
     
     public static Task<T?> PostAsync<T>(string? requestUri) where T : class?
