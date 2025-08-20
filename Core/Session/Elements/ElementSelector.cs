@@ -57,11 +57,12 @@ public abstract class ElementSelector(string sessionId, string baseEndpoint) : I
             { "using", selector },
             { "value", value }
         };
+        var url = $"{baseEndpoint}/element";
         
         try
         {
 
-            var response = await DriverClient.PostAsync<FindElementResponse?>(baseEndpoint, body);
+            var response = await DriverClient.PostAsync<FindElementResponse?>(url, body);
             return response == null ? null : new SessionElement(sessionId, response.ElementIdentifier);
         }
         catch (Exception ex)
@@ -77,7 +78,7 @@ public abstract class ElementSelector(string sessionId, string baseEndpoint) : I
             { "using", selector },
             { "value", value }
         };
-        var url = $"{baseEndpoint}s";
+        var url = $"{baseEndpoint}/elements";
         
         try
         {
