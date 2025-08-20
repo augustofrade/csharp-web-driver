@@ -79,4 +79,30 @@ public class ElementSelectorTests : Base
         var element = await session.Dom.GetElementByXPath("//article//h1");
         Assert.NotNull(element);
     }
+    
+    [Fact]
+    public async Task Session_ShouldFindElement_ChildrenAsync()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+        await Task.Delay(1000);
+        
+        var element = await session.Dom.GetElementByClassName("yclinks");
+        var children = await element.GetChildrenAsync();
+        Assert.NotEmpty(children);
+    }
+    
+    [Fact]
+    public async Task Session_ShouldFindElement_Children()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+        await Task.Delay(1000);
+        
+        var element = await session.Dom.GetElementByClassName("yclinks");
+        var children = element.Children;
+        Assert.NotEmpty(children);
+    }
 }

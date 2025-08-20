@@ -6,8 +6,6 @@ namespace Core.Session.Elements;
 
 public class SessionElement(string sessionId, string identifier) : ElementSelector(sessionId, $"/session/{sessionId}/element/{identifier}")
 {
-    private readonly string _sessionId = sessionId;
-    private readonly string _identifier = identifier;
 
     public async Task SendKeys(string keys, bool simulateTyping = true)
     {
@@ -42,5 +40,29 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         var url = $"/session/{sessionId}/element/{identifier}/text";
         var response = await DriverClient.GetAsync<string>(url);
         return response!;
+    }
+
+    public IEnumerable<SessionElement> Children => GetChildrenAsync().GetAwaiter().GetResult();
+
+    public async Task<IEnumerable<SessionElement>> GetChildrenAsync()
+    {
+        var body = new
+        {
+            script = "return arguments[0].children;",
+            args = new List<object>
+            {
+                new { ELEMENT = identifier }
+            }
+        };
+        var url = $"/session/{sessionId}/execute/sync";
+
+        try
+        {
+            var response = await DriverClient.PostAsync<IEnumerable<FindElementResponse>>(url, body);
+            return response == null ? [] : response.Select(el => new SessionElement(sessionId, el.ElementIdentifier));
+        } catch (Exception ex)
+        {
+            return [];
+        }
     }
 }
