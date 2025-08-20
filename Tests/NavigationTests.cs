@@ -56,7 +56,7 @@ public class NavigationTests: Base
         var session = await InitSession();
         
         await session.Location.NavigateTo("https://duckduckgo.com/");
-        var title = await session.Location.Title();
+        var title = await session.Location.GetTitleAsync();
         Assert.Equal("DuckDuckGo - Protection. Privacy. Peace of mind." , title);
     }
 }

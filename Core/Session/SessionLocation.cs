@@ -14,7 +14,9 @@ public class SessionLocation(string sessionId)
         });
     }
     
-    public async Task<string> Title()
+    public string Title => GetTitleAsync().GetAwaiter().GetResult();
+    
+    public async Task<string> GetTitleAsync()
     {
         var response = await DriverClient.GetAsync<string>($"/session/{_sessionId}/title");
         return response!;
