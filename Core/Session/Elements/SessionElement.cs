@@ -35,7 +35,9 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         return response == null;
     }
 
-    public async Task<string> GetText()
+    public string TextContent => GetTextAsync().GetAwaiter().GetResult();
+
+    public async Task<string> GetTextAsync()
     {
         var url = $"/session/{sessionId}/element/{identifier}/text";
         var response = await DriverClient.GetAsync<string>(url);

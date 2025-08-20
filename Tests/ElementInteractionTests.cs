@@ -32,7 +32,20 @@ public class ElementInteractionTests : Base
         await Task.Delay(1000);
 
         var titleEl = await session.Dom.QuerySelector("section h2");
-        var title = await  titleEl.GetText();
+        var title = titleEl.TextContent;
+        Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
+    }
+    
+    [Fact]
+    public async Task Session_ShouldGetElement_TextAsync()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        await Task.Delay(1000);
+
+        var titleEl = await session.Dom.QuerySelector("section h2");
+        var title = await titleEl.GetTextAsync();
         Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
     }
     
@@ -49,7 +62,7 @@ public class ElementInteractionTests : Base
         foreach (var submission in await session.Dom.QuerySelectorAll(".submission"))
         {
             var titleEl = await submission.QuerySelector(".titleline");
-            var title = await  titleEl!.GetText();
+            var title = await  titleEl!.GetTextAsync();
             titleList.Add(title);
         }
         

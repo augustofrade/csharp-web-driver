@@ -40,24 +40,24 @@ public class ScrappingTests : Base
 
                 var titleElement = await submission.QuerySelector(".titleline");
                 if (titleElement != null)
-                    sub.Title = await titleElement.GetText();
+                    sub.Title = titleElement.TextContent;
 
                 var scoreElement = await subline.QuerySelector(".score");
                 if (scoreElement != null)
                 {
-                    var scoreRaw = await scoreElement.GetText();
+                    var scoreRaw = scoreElement.TextContent;
                     var scoreMatch = Regex.Match(scoreRaw, @"(\d+)");
                     sub.Score = scoreMatch.Success ? int.Parse(scoreMatch.Groups[1].Value) : 0;
                 }
 
                 var authorElement = await subline.QuerySelector(".hnuser");
                 if(authorElement != null)
-                    sub.Author = await authorElement.GetText();
+                    sub.Author = authorElement.TextContent;
                 
                 var commentsElement = await subline.QuerySelector(".subline > a:last-child");
                 if (commentsElement != null)
                 {
-                    var commentsRaw = await commentsElement.GetText();
+                    var commentsRaw = commentsElement.TextContent;
                     var commentsMatch = Regex.Match(commentsRaw, @"(\d+)");
                     sub.Comments = commentsMatch.Success ? int.Parse(commentsMatch.Groups[1].Value) : 0;
                 }
