@@ -4,12 +4,25 @@ using Core.Session.Elements;
 namespace Tests;
 
 
+public class HackerNewsAuthor
+{
+    public string Name { get; private init; }
+    public string Url { get; private init; }
+
+    public HackerNewsAuthor(string name, string url)
+    {
+        Name = name;
+        Url = $"https://news.ycombinator.com/{url}";
+    }
+}
+
 public class HackerNewsSubmission
 {
+    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public int Score { get; set; }
     public string Url { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+    public HackerNewsAuthor Author { get; set; }
     public int Comments { get; set; }
 }
 
@@ -38,6 +51,12 @@ public class ScrappingTests : Base
 
                 var sub = new HackerNewsSubmission();
 
+                var id = submission.Id!;
+                sub.Id = int.Parse(id);
+
+                var submissionAnchor = await submission.QuerySelector(".titleline a");
+                sub.Url = (await submissionAnchor!.GetAttributeAsync("href"))!;
+
                 var titleElement = await submission.QuerySelector(".titleline");
                 if (titleElement != null)
                     sub.Title = titleElement.TextContent;
@@ -51,8 +70,12 @@ public class ScrappingTests : Base
                 }
 
                 var authorElement = await subline.QuerySelector(".hnuser");
-                if(authorElement != null)
-                    sub.Author = authorElement.TextContent;
+                if (authorElement != null)
+                {
+                    var authorName = authorElement.TextContent;
+                    var authorPage = await authorElement.GetAttributeAsync("href");
+                    sub.Author = new HackerNewsAuthor(authorName, authorPage!);
+                }
                 
                 var commentsElement = await subline.QuerySelector(".subline > a:last-child");
                 if (commentsElement != null)

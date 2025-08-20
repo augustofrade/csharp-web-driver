@@ -50,6 +50,19 @@ public class ElementInteractionTests : Base
     }
     
     [Fact]
+    public async Task Session_ShouldGetElement_AttributeAsync()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://duckduckgo.com/");
+        await Task.Delay(1000);
+
+        var html = await session.Dom.QuerySelector("html");
+        var pageLanguage = await html.GetAttributeAsync("lang");
+        Assert.Equal("en-US", pageLanguage);
+    }
+    
+    [Fact]
     public async Task Session_ShouldGetHackerNews_SubmissionTitles()
     {
         var session = await InitSession();

@@ -66,4 +66,14 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
             return [];
         }
     }
+
+    public string? Id => GetAttribute("id");
+    
+    public string? GetAttribute(string attributeName) => GetAttributeAsync(attributeName).GetAwaiter().GetResult();
+
+    public Task<string?> GetAttributeAsync(string attributeName)
+    {
+        var url = $"{BaseEndpoint}/attribute/{attributeName}";
+        return DriverClient.GetAsync<string?>(url);
+    }
 }
