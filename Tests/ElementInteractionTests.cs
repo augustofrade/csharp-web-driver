@@ -44,8 +44,28 @@ public class ElementInteractionTests
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
 
-        var titleEl = await session.Dom.QuerySelector("#searchbox_homepage button:last-child");
+        var titleEl = await session.Dom.QuerySelector("section h2");
         var title = await  titleEl.GetText();
         Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
+    }
+    
+    [Fact]
+    public async Task Session_ShouldGetHackerNews_SubmissionTitles()
+    {
+        var driver = new ChromeDriver(new WebDriverOptions(DriverPath, BinaryPath));
+        var session = await driver.Start();
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+        await Task.Delay(1000);
+
+        List<string> titleList = [];
+        
+        foreach (var submission in await session.Dom.QuerySelectorAll(".submission"))
+        {
+            var titleEl = await submission.QuerySelector(".titleline");
+            var title = await  titleEl!.GetText();
+            titleList.Add(title);
+        }
+        
+        Assert.NotEmpty(titleList);
     }
 }
