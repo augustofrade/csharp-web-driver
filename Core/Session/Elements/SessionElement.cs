@@ -76,4 +76,12 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         var url = $"{BaseEndpoint}/attribute/{attributeName}";
         return DriverClient.GetAsync<string?>(url);
     }
+    
+    public T? GetProperty<T>(string propertyName) => GetPropertyAsync<T>(propertyName).GetAwaiter().GetResult();
+
+    public Task<T?> GetPropertyAsync<T>(string propertyName)
+    {
+        var url = $"{BaseEndpoint}/property/{propertyName}";
+        return DriverClient.GetAsync<T>(url);
+    }
 }

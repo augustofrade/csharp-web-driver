@@ -63,6 +63,24 @@ public class ElementInteractionTests : Base
     }
     
     [Fact]
+    public async Task Session_ShouldGetElement_PropertyAsync()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://old.reddit.com/r/ProgrammerHumor/");
+        await Task.Delay(1000);
+
+        var searchBox = (await session.Dom.QuerySelector("[name='q']"))!;
+        await searchBox.Click();
+        await Task.Delay(1000);
+        
+        var checkbox = (await session.Dom.QuerySelector("[name='restrict_sr']"))!;
+        await checkbox.Click();
+        var isChecked = await checkbox.GetPropertyAsync<bool>("checked");
+        Assert.True(isChecked);
+    }
+    
+    [Fact]
     public async Task Session_ShouldGetHackerNews_SubmissionTitles()
     {
         var session = await InitSession();
