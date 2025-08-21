@@ -81,6 +81,17 @@ public class ElementInteractionTests : Base
     }
     
     [Fact]
+    public async Task Session_ShouldGetElement_ClassList()
+    {
+        var session = await InitSession();
+
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+        var element = await session.Dom.GetElementByClassName("submission");
+        var classList = element!.ClassList;
+        Assert.Contains("athing", classList);
+    }
+    
+    [Fact]
     public async Task Session_ShouldGetHackerNews_SubmissionTitles()
     {
         var session = await InitSession();

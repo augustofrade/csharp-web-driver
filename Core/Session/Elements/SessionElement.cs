@@ -69,6 +69,16 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
 
     public string? Id => GetAttribute("id");
     
+    public string? ClassName => GetAttribute("class");
+    
+    public IEnumerable<string> ClassList => GetClassListAsync().GetAwaiter().GetResult();
+
+    public async Task<IEnumerable<string>> GetClassListAsync()
+    {
+        var classList = await GetAttributeAsync("class");
+        return classList?.Split(" ") ?? [];
+    }
+    
     public string? GetAttribute(string attributeName) => GetAttributeAsync(attributeName).GetAwaiter().GetResult();
 
     public Task<string?> GetAttributeAsync(string attributeName)
