@@ -47,26 +47,16 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
 
     public async Task<IEnumerable<SessionElement>> GetChildrenAsync()
     {
-        var body = new
-        {
-            script = "return arguments[0].children;",
-            args = new List<object>
-            {
-                new { ELEMENT = identifier }
-            }
-        };
-        var url = $"/session/{SessionId}/execute/sync";
-
         try
         {
-            var response = await DriverClient.PostAsync<IEnumerable<FindElementResponse>>(url, body);
+            var response = await Execute<IEnumerable<FindElementResponse>>("return arguments[0].children;");
             return response == null ? [] : response.Select(el => new SessionElement(SessionId, el.ElementIdentifier));
         } catch (Exception ex)
         {
             return [];
         }
     }
-
+    
     public string? Id => GetAttribute("id");
     
     public string? ClassName => GetAttribute("class");
@@ -93,6 +83,25 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
     {
         var url = $"{BaseEndpoint}/property/{propertyName}";
         return DriverClient.GetAsync<T>(url);
+    }
+
+    public Task<T?> Execute<T>(string script, params object[] args) where T : class
+    {
+        var scriptArgs = new List<object>
+        {
+            new { ELEMENT = identifier },
+        };
+        
+        scriptArgs.AddRange(args);
+        
+        var body = new
+        {
+            script = script,
+            args = scriptArgs
+        };
+        var url = $"/session/{SessionId}/execute/sync";
+
+        return DriverClient.PostAsync<T>(url, body);
     }
 
     public override string ToString()

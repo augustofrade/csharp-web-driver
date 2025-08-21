@@ -90,6 +90,18 @@ public class ElementInteractionTests : Base
         var classList = element!.ClassList;
         Assert.Contains("athing", classList);
     }
+
+    [Fact]
+    public async Task Session_ElementShould_ExecuteScript()
+    {
+        var session = await InitSession();
+        
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+
+        var body = await session.Dom.QuerySelector("body");
+        var href = await body!.Execute<string>("return location.href");
+        Assert.Equal("https://news.ycombinator.com/", href);
+    }
     
     [Fact]
     public async Task Session_ShouldGetHackerNews_SubmissionTitles()
