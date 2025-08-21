@@ -109,8 +109,8 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://news.ycombinator.com/");
 
         var body = await session.Dom.QuerySelector("body");
-        var href = await body!.Execute<string>("return location.href");
-        Assert.Equal("https://news.ycombinator.com/", href);
+        var concatenation = await body!.ExecuteJs<string>("return arguments[1] + arguments[2];", 1, "abc");
+        Assert.Equal("1abc", concatenation);
     }
     
     [Fact]

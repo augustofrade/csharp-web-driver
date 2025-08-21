@@ -49,7 +49,7 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
     {
         try
         {
-            var response = await Execute<IEnumerable<FindElementResponse>>("return arguments[0].children;");
+            var response = await ExecuteJs<IEnumerable<FindElementResponse>>("return arguments[0].children;");
             return response == null ? [] : response.Select(el => new SessionElement(SessionId, el.ElementIdentifier));
         } catch (Exception ex)
         {
@@ -57,7 +57,7 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         }
     }
     
-    public string TagName => Execute<string>("return arguments[0].tagName;").GetAwaiter().GetResult()?.ToLower() ?? "";
+    public string TagName => ExecuteJs<string>("return arguments[0].tagName;").GetAwaiter().GetResult()?.ToLower() ?? "";
 
     public string? Id => GetAttribute("id");
     
@@ -87,7 +87,7 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         return DriverClient.GetAsync<T>(url);
     }
 
-    public Task<T?> Execute<T>(string script, params object[] args) where T : class
+    public Task<T?> ExecuteJs<T>(string script, params object[] args) where T : class
     {
         var scriptArgs = new List<object>
         {
