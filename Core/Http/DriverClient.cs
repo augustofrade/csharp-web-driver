@@ -18,6 +18,15 @@ public static class DriverClient
         var data = JsonSerializer.Deserialize<WebDriverReponse<T>>(rawResponse);
         return data == null ? default : data.Value;
     }
+
+    public static async Task<T?> DeleteAsync<T>(string requestUri)
+    {
+        var response = await Http.DeleteAsync(requestUri);
+        var rawResponse = await response.Content.ReadAsStringAsync();
+        
+        var data = JsonSerializer.Deserialize<WebDriverReponse<T>>(rawResponse);
+        return data == null ? default : data.Value;
+    }
     
     public static Task<T?> PostAsync<T>(string? requestUri) where T : class?
     {
