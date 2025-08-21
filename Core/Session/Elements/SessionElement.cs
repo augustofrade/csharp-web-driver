@@ -57,6 +57,8 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         }
     }
     
+    public string TagName => Execute<string>("return arguments[0].tagName;").GetAwaiter().GetResult()?.ToLower() ?? "";
+
     public string? Id => GetAttribute("id");
     
     public string? ClassName => GetAttribute("class");

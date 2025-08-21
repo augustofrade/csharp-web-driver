@@ -90,6 +90,16 @@ public class ElementInteractionTests : Base
         var classList = element!.ClassList;
         Assert.Contains("athing", classList);
     }
+    
+    [Fact]
+    public async Task Session_ShouldGetElement_TagName()
+    {
+        var session = await InitSession();
+
+        await session.Location.NavigateTo("https://news.ycombinator.com/");
+        var element = await session.Dom.GetElementById("hnmain");
+        Assert.Contains("table", element.TagName);
+    }
 
     [Fact]
     public async Task Session_ElementShould_ExecuteScript()
