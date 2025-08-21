@@ -2,20 +2,42 @@ using Core.Http;
 using Core.Session;
 using Core.Session.Dialogs;
 using Core.Session.Elements;
+using Core.Session.Windows;
 
 namespace Core;
 
-public class WebDriverSession(string id)
+public class WebDriverSession
 {
-    public SessionLocation Location = new(id);
+    private readonly string _id;
     
-    public IElementSelector Dom = new SessionElementSelector(id);
+    public SessionLocation Location;
     
-    public SessionContext Context = new(id);
+    public IElementSelector Dom;
     
-    public ISimpleDialog Alert = new SimpleDialog(id);
+    public SessionContext Context;
+
+    public SessionWindowManager Windows;
     
-    public ISimpleDialog Confirm = new SimpleDialog(id);
+    public ISimpleDialog Alert;
     
-    public PromptDialog Prompt = new(id);
+    public ISimpleDialog Confirm;
+    
+    public PromptDialog Prompt;
+
+    public WebDriverSession(string id)
+    {
+        _id = id;
+        Location = new SessionLocation(id);
+        Dom = new SessionElementSelector(id);
+        Context = new SessionContext(_id);
+        Windows = new SessionWindowManager(this);
+        Alert = new SimpleDialog(_id);
+        Confirm = new SimpleDialog(_id);
+        Prompt = new PromptDialog(_id);
+    }
+
+    public override string ToString()
+    {
+        return _id;
+    }
 }
