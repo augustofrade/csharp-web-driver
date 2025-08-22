@@ -51,4 +51,45 @@ public class WindowContextTests : Base
         
         Assert.Null(title);
     }
+    
+    [Fact]
+    public async Task TopLevelContext_ShouldGet_WindowRect()
+    {
+        var session = await InitSession();
+
+        var rect = session.Context.Rect.Get();
+    }
+    
+    [Fact]
+    public async Task TopLevelContext_ShouldSet_WindowSize()
+    {
+        var session = await InitSession();
+
+        var rect = session.Context.Rect.SetSize(1000, 800);
+        Assert.Equal(1000, rect.width);
+        Assert.Equal(800, rect.height);
+    }
+    
+    [Fact]
+    public async Task TopLevelContext_ShouldSet_WindowPosition()
+    {
+        var session = await InitSession();
+        
+        session.Context.Rect.SetSize(1000, 800);
+        var rect = session.Context.Rect.SetPosition(500, 200);
+        Assert.Equal(500, rect.x);
+        Assert.Equal(200, rect.y);
+    }
+    
+    [Fact]
+    public async Task TopLevelContext_ShouldSet_WindowRect()
+    {
+        var session = await InitSession();
+
+        var rect = session.Context.Rect.Set(500, 200, 1000, 800);
+        Assert.Equal(500, rect.x);
+        Assert.Equal(200, rect.y);
+        Assert.Equal(1000, rect.width);
+        Assert.Equal(800, rect.height);
+    }
 }

@@ -1,10 +1,13 @@
 using Core.Http;
+using Core.Session.Context;
 using Core.Session.Elements;
 
 namespace Core.Session;
 
 public class SessionContext(string sessionId)
 {
+    public SessionContextRectManager Rect = new(sessionId);
+    
     public async Task SwitchToParentFrame()
     {
         var url = $"/session/{sessionId}/frame/parent";
