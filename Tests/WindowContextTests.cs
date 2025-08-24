@@ -9,13 +9,12 @@ public class WindowContextTests : Base
         await session.Location.NavigateTo("https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert");
         await Task.Delay(1000);
 
-        var iframe = await session.Dom.GetElementById("iframeResult");
-        await session.Context.SwitchToFrame(iframe!);
+        var iframe = session.Dom.GetElementById("iframeResult")!;
+        await session.Context.SwitchToFrame(iframe);
 
-        var innerTitleEl = await session.Dom.QuerySelector("h1");
-        var title = innerTitleEl?.TextContent;
+        var innerTitle = session.Dom.QuerySelector("h1")?.TextContent;
         
-        Assert.Equal("The Window Object", title);
+        Assert.Equal("The Window Object", innerTitle);
     }
     
     [Fact]
@@ -25,14 +24,13 @@ public class WindowContextTests : Base
         await session.Location.NavigateTo("https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert");
         await Task.Delay(1000);
 
-        var iframe = await session.Dom.GetElementById("iframeResult");
-        await session.Context.SwitchToFrame(iframe!);
+        var iframe = session.Dom.GetElementById("iframeResult")!;
+        await session.Context.SwitchToFrame(iframe);
         await session.Context.Reset();
 
-        var innerTitleEl = await session.Dom.QuerySelector("h1");
-        var title = innerTitleEl?.TextContent;
+        var innerTitle = session.Dom.QuerySelector("h1")?.TextContent;
         
-        Assert.Null(title);
+        Assert.Null(innerTitle);
     }
     
     [Fact]
@@ -42,14 +40,13 @@ public class WindowContextTests : Base
         await session.Location.NavigateTo("https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_alert");
         await Task.Delay(1000);
 
-        var iframe = await session.Dom.GetElementById("iframeResult");
-        await session.Context.SwitchToFrame(iframe!);
+        var iframe = session.Dom.GetElementById("iframeResult")!;
+        await session.Context.SwitchToFrame(iframe);
         await session.Context.SwitchToParentFrame();
 
-        var innerTitleEl = await session.Dom.QuerySelector("h1");
-        var title = innerTitleEl?.TextContent;
+        var innerTitle = session.Dom.QuerySelector("h1")?.TextContent;
         
-        Assert.Null(title);
+        Assert.Null(innerTitle);
     }
     
     [Fact]

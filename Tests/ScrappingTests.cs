@@ -36,13 +36,12 @@ public class ScrappingTests : Base
         await session.Location.NavigateTo("https://news.ycombinator.com/");
 
         List<HackerNewsSubmission> submissions = [];
-        
-        const int maxPages = 3;
+        const int maxPages = 10;
         
         for (var page = 1; page <= maxPages; page++)
         {
-            var submissionElements = (await session.Dom.QuerySelectorAll(".submission")).ToList();
-            var submissionInfoElements = (await session.Dom.QuerySelectorAll(".submission + tr")).ToList();
+            var submissionElements = session.Dom.QuerySelectorAll(".submission").ToList();
+            var submissionInfoElements = session.Dom.QuerySelectorAll(".submission + tr").ToList();
             
             for (var i = 0; i < submissionElements.Count; i++)
             {
@@ -53,15 +52,14 @@ public class ScrappingTests : Base
 
                 var id = submission.Id!;
                 sub.Id = int.Parse(id);
-
-                var submissionAnchor = await submission.QuerySelector(".titleline a");
+                var submissionAnchor = submission.QuerySelector(".titleline a");
                 sub.Url = (await submissionAnchor!.GetAttributeAsync("href"))!;
 
-                var titleElement = await submission.QuerySelector(".titleline");
+                var titleElement = submission.QuerySelector(".titleline");
                 if (titleElement != null)
                     sub.Title = titleElement.TextContent;
 
-                var scoreElement = await subline.QuerySelector(".score");
+                var scoreElement = subline.QuerySelector(".score");
                 if (scoreElement != null)
                 {
                     var scoreRaw = scoreElement.TextContent;
@@ -69,7 +67,7 @@ public class ScrappingTests : Base
                     sub.Score = scoreMatch.Success ? int.Parse(scoreMatch.Groups[1].Value) : 0;
                 }
 
-                var authorElement = await subline.QuerySelector(".hnuser");
+                var authorElement = subline.QuerySelector(".hnuser");
                 if (authorElement != null)
                 {
                     var authorName = authorElement.TextContent;
@@ -77,7 +75,7 @@ public class ScrappingTests : Base
                     sub.Author = new HackerNewsAuthor(authorName, authorPage!);
                 }
                 
-                var commentsElement = await subline.QuerySelector(".subline > a:last-child");
+                var commentsElement = subline.QuerySelector(".subline > a:last-child");
                 if (commentsElement != null)
                 {
                     var commentsRaw = commentsElement.TextContent;
@@ -90,8 +88,7 @@ public class ScrappingTests : Base
 
             if (page >= maxPages) continue;
             
-            var moreBtn = await session.Dom.QuerySelector(".morelink");
-            await moreBtn.Click();
+            session.Dom.QuerySelector(".morelink")!.Click();
             await Task.Delay(1000);
         }
         

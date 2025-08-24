@@ -14,52 +14,52 @@ public abstract class ElementSelector : IElementSelector
         BaseEndpoint = baseEndpoint;
     }
     
-    public Task<SessionElement?> QuerySelector(string query)
+    public SessionElement? QuerySelector(string query)
     {
         return GetElement("css selector", query);
     }
     
-    public Task<IEnumerable<SessionElement>> QuerySelectorAll(string query)
+    public IEnumerable<SessionElement> QuerySelectorAll(string query)
     {
         return GetElements("css selector", query);
     }
     
-    public Task<SessionElement?> GetElementById(string elementId)
+    public SessionElement? GetElementById(string elementId)
     {
         return GetElement("css selector", $"#{elementId}");
     }
     
-    public Task<SessionElement?> GetElementByTagName(string tag)
+    public SessionElement? GetElementByTagName(string tag)
     {
         return GetElement("tag name", tag);
     }
     
-    public Task<IEnumerable<SessionElement>> GetElementsByTagName(string tag)
+    public IEnumerable<SessionElement> GetElementsByTagName(string tag)
     {
         return GetElements("tag name", tag);
     }
     
-    public Task<SessionElement?> GetElementByXPath(string xpath)
+    public SessionElement? GetElementByXPath(string xpath)
     {
         return GetElement("xpath", xpath);
     }
     
-    public Task<IEnumerable<SessionElement>> GetElementsByXPath(string xpath)
+    public IEnumerable<SessionElement> GetElementsByXPath(string xpath)
     {
         return GetElements("xpath", xpath);
     }
     
-    public Task<IEnumerable<SessionElement>> GetElementsByClassName(string className)
+    public IEnumerable<SessionElement> GetElementsByClassName(string className)
     {
         return GetElements("css selector", $".{className}");
     }
     
-    public Task<SessionElement?> GetElementByClassName(string className)
+    public SessionElement? GetElementByClassName(string className)
     {
         return GetElement("css selector", $".{className}");
     }
 
-    private async Task<SessionElement?> GetElement(string selector, string value)
+    private SessionElement? GetElement(string selector, string value)
     {
         var body = new Dictionary<string, string>
         {
@@ -71,7 +71,7 @@ public abstract class ElementSelector : IElementSelector
         try
         {
 
-            var response = await DriverClient.PostAsync<FindElementResponse?>(url, body);
+            var response = DriverClient.PostAsync<FindElementResponse?>(url, body).GetAwaiter().GetResult();
             return response == null ? null : new SessionElement(SessionId, response.ElementIdentifier);
         }
         catch (Exception ex)
@@ -80,7 +80,7 @@ public abstract class ElementSelector : IElementSelector
         }
     }
     
-    private async Task<IEnumerable<SessionElement>> GetElements(string selector, string value)
+    private IEnumerable<SessionElement> GetElements(string selector, string value)
     {
         var body = new Dictionary<string, string>
         {
@@ -91,7 +91,7 @@ public abstract class ElementSelector : IElementSelector
         
         try
         {
-            var response = await DriverClient.PostAsync<IEnumerable<FindElementResponse>?>(url, body);
+            var response = DriverClient.PostAsync<IEnumerable<FindElementResponse>?>(url, body).GetAwaiter().GetResult();
             return response == null ? [] : response.Select(el => new SessionElement(SessionId, el.ElementIdentifier));
         }
         catch (Exception ex)

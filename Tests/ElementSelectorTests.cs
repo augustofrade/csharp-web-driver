@@ -15,8 +15,8 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var form = await session.Dom.GetElementById("searchbox_homepage");
-        var searchBox = form != null ? await form.GetElementById("searchbox_input") : null;
+        var form = session.Dom.GetElementById("searchbox_homepage");
+        var searchBox = form != null ? form.GetElementById("searchbox_input") : null;
         Assert.NotNull(searchBox);
     }
     
@@ -28,7 +28,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.GetElementByTagName("h2");
+        var element = session.Dom.GetElementByTagName("h2");
         Assert.NotNull(element);
     }
     
@@ -40,7 +40,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.GetElementByClassName("text-center");
+        var element = session.Dom.GetElementByClassName("text-center");
         Assert.NotNull(element);
     }
     
@@ -52,7 +52,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.QuerySelector("section h2");
+        var element = session.Dom.QuerySelector("section h2");
         Assert.NotNull(element);
     }
     
@@ -64,7 +64,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var elements = await session.Dom.QuerySelectorAll("ul.flex li");
+        var elements = session.Dom.QuerySelectorAll("ul.flex li");
         Assert.NotEmpty(elements);
     }
     
@@ -76,7 +76,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.GetElementByXPath("//article//h1");
+        var element = session.Dom.GetElementByXPath("//article//h1");
         Assert.NotNull(element);
     }
     
@@ -88,7 +88,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://news.ycombinator.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.GetElementByClassName("yclinks");
+        var element = session.Dom.GetElementByClassName("yclinks")!;
         var children = await element.GetChildrenAsync();
         Assert.NotEmpty(children);
     }
@@ -101,7 +101,7 @@ public class ElementSelectorTests : Base
         await session.Location.NavigateTo("https://news.ycombinator.com/");
         await Task.Delay(1000);
         
-        var element = await session.Dom.GetElementByClassName("yclinks");
+        var element = session.Dom.GetElementByClassName("yclinks")!;
         var children = element.Children;
         Assert.NotEmpty(children);
     }

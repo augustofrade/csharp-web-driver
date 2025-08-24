@@ -14,11 +14,9 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
         
-        var searchBox = await session.Dom.GetElementById("searchbox_input");
-        await searchBox.SendKeys("github");
+        session.Dom.GetElementById("searchbox_input")!.SendKeys("github");
         
-        var searchButton = await session.Dom.QuerySelector("#searchbox_homepage button:last-child");
-        await searchButton.Click();
+        session.Dom.QuerySelector("#searchbox_homepage button:last-child")!.Click();
         
         await Task.Delay(2000);
     }
@@ -31,7 +29,7 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
 
-        var titleEl = await session.Dom.QuerySelector("section h2");
+        var titleEl = session.Dom.QuerySelector("section h2")!;
         var title = titleEl.TextContent;
         Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
     }
@@ -44,7 +42,7 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
 
-        var titleEl = await session.Dom.QuerySelector("section h2");
+        var titleEl = session.Dom.QuerySelector("section h2")!;
         var title = await titleEl.GetTextAsync();
         Assert.Equal("Switch to DuckDuckGo. It’s private and free!", title);
     }
@@ -57,7 +55,7 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://duckduckgo.com/");
         await Task.Delay(1000);
 
-        var html = await session.Dom.QuerySelector("html");
+        var html = session.Dom.QuerySelector("html")!;
         var pageLanguage = await html.GetAttributeAsync("lang");
         Assert.Equal("en-US", pageLanguage);
     }
@@ -70,12 +68,11 @@ public class ElementInteractionTests : Base
         await session.Location.NavigateTo("https://old.reddit.com/r/ProgrammerHumor/");
         await Task.Delay(1000);
 
-        var searchBox = (await session.Dom.QuerySelector("[name='q']"))!;
-        await searchBox.Click();
+        session.Dom.QuerySelector("[name='q']")!.Click();
         await Task.Delay(1000);
         
-        var checkbox = (await session.Dom.QuerySelector("[name='restrict_sr']"))!;
-        await checkbox.Click();
+        var checkbox = session.Dom.QuerySelector("[name='restrict_sr']")!;
+        checkbox.Click();
         var isChecked = await checkbox.GetPropertyAsync<bool>("checked");
         Assert.True(isChecked);
     }
@@ -86,8 +83,8 @@ public class ElementInteractionTests : Base
         var session = await InitSession();
 
         await session.Location.NavigateTo("https://news.ycombinator.com/");
-        var element = await session.Dom.GetElementByClassName("submission");
-        var classList = element!.ClassList;
+        
+        var classList = session.Dom.GetElementByClassName("submission")!.ClassList;
         Assert.Contains("athing", classList);
     }
     
@@ -97,8 +94,8 @@ public class ElementInteractionTests : Base
         var session = await InitSession();
 
         await session.Location.NavigateTo("https://news.ycombinator.com/");
-        var element = await session.Dom.GetElementById("hnmain");
-        Assert.Contains("table", element.TagName);
+        var tagName = session.Dom.GetElementById("hnmain")!.TagName;
+        Assert.Contains("table", tagName);
     }
 
     [Fact]
@@ -108,8 +105,8 @@ public class ElementInteractionTests : Base
         
         await session.Location.NavigateTo("https://news.ycombinator.com/");
 
-        var body = await session.Dom.QuerySelector("body");
-        var concatenation = await body!.ExecuteJs<string>("return arguments[1] + arguments[2];", 1, "abc");
+        var body = session.Dom.QuerySelector("body")!;
+        var concatenation = await body.ExecuteJs<string>("return arguments[1] + arguments[2];", 1, "abc");
         Assert.Equal("1abc", concatenation);
     }
     
@@ -123,10 +120,9 @@ public class ElementInteractionTests : Base
 
         List<string> titleList = [];
         
-        foreach (var submission in await session.Dom.QuerySelectorAll(".submission"))
+        foreach (var submission in session.Dom.QuerySelectorAll(".submission"))
         {
-            var titleEl = await submission.QuerySelector(".titleline");
-            var title = await  titleEl!.GetTextAsync();
+            var title = await submission.QuerySelector(".titleline")!.GetTextAsync();
             titleList.Add(title);
         }
         

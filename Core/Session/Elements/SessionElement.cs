@@ -6,31 +6,31 @@ namespace Core.Session.Elements;
 
 public class SessionElement(string sessionId, string identifier) : ElementSelector(sessionId, $"/session/{sessionId}/element/{identifier}")
 {
-    public async Task SendKeys(string keys, bool simulateTyping = true)
+    public void SendKeys(string keys, bool simulateTyping = true)
     {
         var url = $"{BaseEndpoint}/value";
         if (!simulateTyping)
         {
-            await DriverClient.PostAsync<object>(url, new
+            DriverClient.PostAsync<object>(url, new
             {
                 text = keys
-            });
+            }).GetAwaiter().GetResult();
             return;
         }
 
         foreach (var key in keys)
         {
-            await DriverClient.PostAsync<object>(url, new
+            DriverClient.PostAsync<object>(url, new
             {
                 text = key
-            });
+            }).GetAwaiter().GetResult();
         }
     }
 
-    public async Task<bool> Click()
+    public bool Click()
     {
         var url = $"{BaseEndpoint}/click";
-        var response = await DriverClient.PostAsync<object?>(url);
+        var response = DriverClient.PostAsync<object?>(url).GetAwaiter().GetResult();
         return response == null;
     }
 
