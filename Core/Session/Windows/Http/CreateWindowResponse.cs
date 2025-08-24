@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Core.Http.Dto.Session.Windows;
+namespace Core.Session.Windows.Http;
 
 public record CreateWindowResponse
 {

@@ -1,5 +1,5 @@
 using Core.Http;
-using Core.Http.Dto.Session.Windows;
+using Core.Session.Windows.Http;
 
 namespace Core.Session.Windows;
 

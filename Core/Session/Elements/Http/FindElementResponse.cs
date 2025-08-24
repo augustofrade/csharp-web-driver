@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using Core.Session.Elements;
 
-namespace Core.Http.Dto.Session.Elements;
+namespace Core.Session.Elements.Http;
 
 public record FindElementResponse
 {

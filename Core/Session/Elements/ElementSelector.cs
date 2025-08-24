@@ -1,5 +1,5 @@
 using Core.Http;
-using Core.Http.Dto.Session.Elements;
+using Core.Session.Elements.Http;
 
 namespace Core.Session.Elements;
 
