@@ -1,5 +1,6 @@
 using Core;
 using Core.Drivers;
+using Core.Session.Elements.Options;
 using DotNetEnv;
 
 namespace Tests;
@@ -127,5 +128,25 @@ public class ElementInteractionTests : Base
         }
         
         Assert.NotEmpty(titleList);
+    }
+
+    [Fact]
+    public async Task Session_ShouldScrollIntoView_Element()
+    {
+        var session = await InitSession();
+        await session.Location.NavigateTo("https://news.ycombinator.com/newcomments");
+        await Task.Delay(1000);
+        
+        var row = session.Dom.QuerySelectorAll("tr.athing").ElementAt(10);
+        row.ScrollIntoView(new ElementAlignToTopOptions
+        {
+            Behavior = ElementAlignToTopBehavior.Smooth
+        });
+
+        await Task.Delay(1000);
+        
+        var scrollPos = session.Context.Rect.Get().y;
+
+        Assert.True(scrollPos > 0);
     }
 }

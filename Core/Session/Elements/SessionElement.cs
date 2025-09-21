@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Core.Http;
 using Core.Session.Elements.Http;
+using Core.Session.Elements.Options;
 
 namespace Core.Session.Elements;
 
@@ -104,6 +105,21 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
         var url = $"/session/{SessionId}/execute/sync";
 
         return DriverClient.PostAsync<T>(url, body);
+    }
+
+    public void ScrollIntoView()
+    {
+        ScrollIntoView(new ElementAlignToTopOptions());
+    }
+    
+    public void ScrollIntoView(ElementAlignToTopOptions options)
+    {
+        var behavior = options.Behavior.ToString().ToLower();
+        var alignment = options.Alignment.ToString().ToLower();
+        const string script = "arguments[0].scrollIntoView({ behavior: arguments[1], block: arguments[2] });";
+        
+        ExecuteJs<object>(script, behavior, alignment)
+            .GetAwaiter().GetResult();
     }
 
     public override string ToString()
