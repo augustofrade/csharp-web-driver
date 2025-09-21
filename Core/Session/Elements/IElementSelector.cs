@@ -1,5 +1,10 @@
 namespace Core.Session.Elements;
 
+/// <summary>
+/// DOM related operations
+/// <br/><br/>
+/// Has the same syntax as JavaScript with some helper methods.
+/// </summary>
 public interface IElementSelector {
     SessionElement? QuerySelector(string query);
     IEnumerable<SessionElement> QuerySelectorAll(string query);
