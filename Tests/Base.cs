@@ -6,8 +6,8 @@ namespace Tests;
 
 public class Base
 {
-    private string DriverPath { get; init; }
-    private string BinaryPath { get; init; }
+    protected string DriverPath { get; init; }
+    protected string BinaryPath { get; init; }
     
     public Base()
     {

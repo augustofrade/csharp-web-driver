@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using Core.Http;
 using Core.Http.Dto.Session;
 
@@ -28,6 +30,11 @@ public abstract class WebDriver(WebDriverOptions options)
     private int Port { get; set; }
 
     /// <summary>
+    /// Extension list provided by the user
+    /// </summary>
+    protected List<string> Extensions { get; init; } = [];
+
+    /// <summary>
     /// Name of the browser to be used during the session initialization.
     /// <br/>
     /// A value is declared by WebDriver child classes.
@@ -52,12 +59,42 @@ public abstract class WebDriver(WebDriverOptions options)
         }
     }
 
+    /// <summary>
+    /// Adds an extension to the session.
+    /// <br/>
+    /// <paramref name="path"/> must be the path to a packaged browser extension.
+    /// </summary>
+    public WebDriver WithExtension(string path)
+    {
+        var fullPath = Path.GetFullPath(path);
+        if(!Path.Exists(fullPath))
+            throw new FileNotFoundException($"Packaged extension not found: \"{fullPath}\"");
+        
+        var pathAttributes = File.GetAttributes(fullPath);
+        if(pathAttributes.HasFlag(FileAttributes.Directory))
+            throw new Exception($"Expected file, found directory: \"{fullPath}\"");
+        
+        Extensions.Add(fullPath);
+
+        return this;
+    }
+
     
     /// <summary>
     /// Creates a session with the running Web Driver.
     /// </summary>
     private async Task<WebDriverSession> CreateSession()
     {
+        var base64Extensions = new List<string>();
+        foreach (var extension in Extensions)
+        {
+            var fileContent = await File.ReadAllBytesAsync(extension);
+            var base64 = Convert.ToBase64String(fileContent);
+            base64Extensions.Add(base64);
+        }
+        
+        // TODO: handle session creation errors
+        
         var body = new
         {
             capabilities = new
@@ -67,12 +104,15 @@ public abstract class WebDriver(WebDriverOptions options)
                     { "browserName", BrowserName },
                     { "goog:chromeOptions", new
                         {
+                            extensions = base64Extensions,
                             binary = BrowserBinaryPath,
                         }
                     }
                 }
             }
         };
+
+        var x = JsonSerializer.Serialize(body);
         
         var data = await DriverClient.PostAsync<CreateSessionResponse>("/session", body);
         return new WebDriverSession(data!.SessionId);

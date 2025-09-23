@@ -106,14 +106,10 @@ public class SessionElement(string sessionId, string identifier) : ElementSelect
 
         return DriverClient.PostAsync<T>(url, body);
     }
-
-    public void ScrollIntoView()
-    {
-        ScrollIntoView(new ElementAlignToTopOptions());
-    }
     
-    public void ScrollIntoView(ElementAlignToTopOptions options)
+    public void ScrollIntoView(ElementAlignToTopOptions? options = null)
     {
+        options ??= new ElementAlignToTopOptions();
         var behavior = options.Behavior.ToString().ToLower();
         var alignment = options.Alignment.ToString().ToLower();
         const string script = "arguments[0].scrollIntoView({ behavior: arguments[1], block: arguments[2] });";
